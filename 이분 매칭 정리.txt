@@ -1,0 +1,11 @@
+이분 그래프에서 성립하는 정리들 feat. 이분매칭
+0. maximum matching : 교차하지 않는 간선들의 최대 집합
+1. minimum vertex cover : 모든 간선과 인접하는 정점들의 최소 집합
+	|mvc|=|mm|
+2. maximum independent set : 연결되지 않은 정점들의 최대 집합
+	|mis|=V-|mvc|=V-|mm|
+3. minimum path cover : DAG의 모든 정점을 최대한 적은 수의 경로로 덮기
+	DAG를 이분 그래프로 변환
+	|mpc|=V-|mm|
+4. maximum antichain : DAG에서 연결되지 않는 정점들의 최대 집합
+	|mac|=|mpc|=V-|mm|

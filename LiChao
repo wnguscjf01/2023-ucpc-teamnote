@@ -1,0 +1,79 @@
+// 직선 여러개 중에서 y값이 큰 직선 저장
+// 1 a b -> ax+b 직선 추가
+// 2 c -> x=c 일때 값 출력
+#include<bits/stdc++.h>
+#define MAXN 200001
+#define MAXX 1000000000001
+using namespace std;
+typedef long long int ll;
+struct line{
+	ll aa, bb;
+	ll cor(ll x){
+		return aa*x+bb;
+	}
+};
+struct data{
+	int ln, rn;
+	ll s, e;
+	struct line l;
+};
+struct data d[MAXN];
+int ncnt;
+int f(int p, struct line put){
+	struct line l1=d[p].l, l2=put;
+	if(l1.cor(d[p].s) < l2.cor(d[p].s)) swap(l1,l2);
+	if(l1.cor(d[p].e)>=l2.cor(d[p].e)){
+		d[p].l=l1; return 0;
+	}
+	ll mid=(d[p].s+d[p].e)/2;
+	if(l1.cor(mid) > l2.cor(mid)){
+		d[p].l=l1;
+		if(d[p].rn==0){
+			d[p].rn = ++ncnt;
+			d[ncnt].s=mid+1; d[ncnt].e=d[p].e; d[ncnt].l=l2;
+		}
+		else f(d[p].rn, l2);
+	}
+	else{
+		d[p].l=l2;
+		if(d[p].ln==0){
+			d[p].ln = ++ncnt;
+			d[ncnt].s=d[p].s; d[ncnt].e=mid; d[ncnt].l=l1;
+		}
+		else f(d[p].ln, l1);
+	}
+	return 0;
+}
+ll gety(int p, ll x){
+	ll mid=(d[p].s+d[p].e)/2;
+	if(x<=mid){
+		if(d[p].ln==0) return d[p].l.cor(x);
+		return max(gety(d[p].ln,x), d[p].l.cor(x));
+	}
+	else{
+		if(d[p].rn==0) return d[p].l.cor(x);
+		return max(gety(d[p].rn,x), d[p].l.cor(x));
+	}
+}
+int main()
+{
+	int n, i, j, a;
+	ll b, c;
+	cin >> n;
+	scanf("%d%lld%lld",&a,&b,&c);
+	ncnt=1;
+	d[ncnt]={0,0,-MAXX,MAXX,{b,c}};
+	for(i=2; i<=n; i++){
+		scanf("%d",&a);
+		if(a==1){
+			scanf("%lld%lld",&b,&c);
+			struct line tmp={b,c};
+			f(1,tmp);
+		}
+		else{
+			scanf("%lld",&b);
+			printf("%lld\n",gety(1,b));
+		}
+	}
+	return 0;
+}
